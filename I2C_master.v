@@ -20,7 +20,7 @@ module I2C_master (
   reg [7:0] temp_data;
   reg [3:0] data_bits_counter;
   reg ack_bits_counter;
-  reg ack_bits_counter_r;
+
 
   reg Drive_flag;
   reg [3:0] current_state, next_state;
@@ -85,6 +85,8 @@ module I2C_master (
 
 
     end else if (current_state == WRITE_BYTE) begin
+      m_error_o <= 0;
+      ack_bits_counter <= 0;
       if (data_bits_counter != 8) Drive_flag <= temp_data[7-data_bits_counter];
       data_bits_counter <= data_bits_counter + 1;
       if (data_bits_counter == 8) begin
@@ -115,13 +117,14 @@ module I2C_master (
 
 
     end else if (current_state == READ_BYTE) begin
-      if (ack_bits_counter_r != 8) temp_data <= {temp_data[6:0], SDA};
-      ack_bits_counter_r <= ack_bits_counter_r + 1;
-      if (ack_bits_counter_r == 8) begin
+      m_error_o <= 0;
+      if (data_bits_counter != 8) temp_data <= {temp_data[6:0], SDA};
+      data_bits_counter <= data_bits_counter + 1;
+      if (data_bits_counter == 8) begin
         m_data_ready_o <= 1;
         m_data_o <= temp_data;
         temp_data <= 0;
-        ack_bits_counter_r <= 0;
+        data_bits_counter <= 0;
       end
 
 
@@ -162,7 +165,7 @@ module I2C_master (
       end
       WRITE_BYTE: begin
         if (m_stop_i) next_state = STOP;
-        else if (data_bits_counter == 9) next_state = RECV_ACK_NACK;
+        else if (data_bits_counter == 0) next_state = RECV_ACK_NACK;
         else next_state = WRITE_BYTE;
         SCA_en = 1;
 
@@ -176,7 +179,7 @@ module I2C_master (
       end
       READ_BYTE: begin
         if (m_stop_i) next_state = STOP;
-        else if (ack_bits_counter_r == 8) begin
+        else if (data_bits_counter == 8) begin
           next_state = SEND_ACK_NACK;
         end else next_state = READ_BYTE;
         SCA_en = 1;

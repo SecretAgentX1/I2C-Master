@@ -17,7 +17,7 @@ module I2C_master_tb;
   wire SCA;
   reg wsda;
   reg wr;
-  // assign SDA = wr == 1 ? wsda : 1'bz;
+  assign SDA = wr == 1 ? wsda : 1'bz;
   I2C_master DUT (
       .clk_i(clk_i),
       .rst_i(rst_i),
@@ -179,6 +179,16 @@ module I2C_master_tb;
     else $display("Write byte failed");
     i = 0;
 
+    @(negedge test_SCA) wsda = 'b0;
+    wr   = 1;
+    wsda = 1;
+    @(posedge test_SCA);
+
+    @(negedge test_SCA);
+    wr = 0;
+    wsda = 0;
+    m_start_i = 0;
+    m_stop_i = 1;
 
 
     #2000;
