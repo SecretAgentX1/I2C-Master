@@ -1,0 +1,7 @@
+*.v.bak
+*.mti
+*.mpf
+*.digitaljs
+*.wlf
+I2C.v
+work/
