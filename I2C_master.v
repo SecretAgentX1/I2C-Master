@@ -15,7 +15,7 @@ module I2C_master (
     inout SDA,
     inout SCA
 );
-  localparam IDLE = 0, START = 1, WRITE_BYTE = 2,WRITE_ADDRESS= 3, RECV_ACK_NACK = 4, READ_BYTE = 5, SEND_ACK_NACK = 6,AFTER_ACK = 7, STOP = 8;
+  localparam IDLE = 0, START = 1, WRITE_BYTE = 3,WRITE_ADDRESS= 2, RECV_ACK_NACK = 4, READ_BYTE = 5, SEND_ACK_NACK = 6,AFTER_ACK = 7, STOP = 8;
   reg [7:0] tmp_addr;
   reg [7:0] temp_data;
   reg [3:0] data_bits_counter;

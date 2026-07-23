@@ -31,6 +31,16 @@ module I2C_master_tb;
       .SDA(SDA),
       .SCA(SCA)
   );
+  wire test_SDA;
+  wire test_SCA;
+  wire SDA_assTest;
+
+
+  integer i = 1;
+  assign SDA = SDA_assTest;
+  assign test_SDA = (SDA === 1'bz) ? 1 : 0;
+  assign test_SCA = (SCA === 1'bz) ? 1 : 0;
+
   always #10 clk_i = ~clk_i;
   initial begin
     clk_i         = 0;
@@ -38,34 +48,78 @@ module I2C_master_tb;
     m_w_r_i       = 0;
     m_start_i     = 0;
     m_stop_i      = 0;
-    m_slave_add_i = 0;
+    m_slave_add_i = 7'b1100111;
     m_ack_i       = 0;
-    m_data_i      = 8'hA5;
+    m_data_i      = 8'b11001010;
 
     #20;
     rst_i = 1;
-
-    #20;
     m_start_i = 1;
-    m_slave_add_i = 1;
+    @(negedge test_SDA);
+    @(negedge test_SCA);
+    $display("time = %0t | start passed", $time);
+    @(posedge test_SCA)
+    if (test_SDA == 'b1) $display("time = %0t | write address passed", $time);
+    else begin
+      i = i - 1;
+      $display("time = %0t | write address failed", $time);
+    end
+    @(posedge test_SCA)
+    if (test_SDA == 'b1) $display("time = %0t | write address passed", $time);
+    else begin
+      i = i - 1;
+      $display("time = %0t | write address failed", $time);
+    end
+    @(posedge test_SCA)
+    if (test_SDA == 0) $display("time = %0t | write address passed", $time);
+    else begin
+      i = i - 1;
+      $display("time = %0t | write address failed", $time);
+    end
+    @(posedge test_SCA)
+    if (test_SDA == 0) $display("time = %0t | write address passed", $time);
+    else begin
+      i = i - 1;
+      $display("time = %0t | write address failed", $time);
+    end
+    @(posedge test_SCA)
+    if (test_SDA == 'b1) $display("time = %0t | write address passed", $time);
+    else begin
+      i = i - 1;
+      $display("time = %0t | write address failed", $time);
+    end
+    @(posedge test_SCA)
+    if (test_SDA == 'b1) $display("time = %0t | write address passed", $time);
+    else begin
+      i = i - 1;
+      $display("time = %0t | write address failed", $time);
+    end
+    @(posedge test_SCA)
+    if (test_SDA == 'b1) $display("time = %0t | write address passed", $time);
+    else begin
+      i = i - 1;
+      $display("time = %0t | write address failed", $time);
+    end
+    @(posedge test_SCA)
+    if (test_SDA == 0) $display("time = %0t | write address passed", $time);
+    else begin
+      i = i - 1;
+      $display("time = %0t | write address failed", $time);
+    end
 
-    #10;
-    m_start_i = 0;
-    m_slave_add_i = 0;
+    if (i == 1) $display("Write address passed");
+    else $display("Write address failed");
+    i = 0;
 
-    #100;
-    m_ack_i = 1;
 
-    #10;
-    m_ack_i = 0;
 
-    #50;
-    m_stop_i = 1;
 
-    #10;
-    m_stop_i = 0;
 
-    #100;
+
+
+
+
+    #2000;
     $finish;
   end
 
