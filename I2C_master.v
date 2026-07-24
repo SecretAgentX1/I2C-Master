@@ -22,6 +22,9 @@ module I2C_master (
   reg ack_bits_counter;
 
 
+  reg start_counter_steps;
+
+
   reg Drive_flag;
   reg [3:0] current_state, next_state;
   // reg SCA_drive;
@@ -67,8 +70,24 @@ module I2C_master (
       m_busy_o <= 0;
       m_data_ready_o <= 0;
       ack_bits_counter <= 0;
+      start_counter_steps <= 0;
     end else begin
       current_state <= next_state;
+    end
+  end
+  // for start and stop 
+  always @(negedge clk_i) begin
+    if (current_state == START) begin
+      start_counter_steps <= start_counter_steps + 1;
+      if (start_counter_steps == 1) begin
+        tmp_addr   <= {m_slave_add_i, m_w_r_i};
+        temp_data  <= m_data_i;
+        Drive_flag <= 0;
+        m_busy_o   <= 1;
+      end
+    end else if (current_state == STOP) begin
+      Drive_flag <= 1;
+      m_busy_o   <= 0;
     end
   end
 
@@ -104,14 +123,8 @@ module I2C_master (
   end
 
   always @(posedge SCA_clk) begin
-    if (current_state == START) begin
-      tmp_addr   <= {m_slave_add_i, m_w_r_i};
-      temp_data  <= m_data_i;
-      Drive_flag <= 0;
-      m_busy_o   <= 1;
 
-
-    end else if (current_state == RECV_ACK_NACK) begin
+    if (current_state == RECV_ACK_NACK) begin
       m_error_o <= SDA;
       ack_bits_counter <= ack_bits_counter + 1;
 
@@ -129,10 +142,10 @@ module I2C_master (
 
 
 
-    end else if (current_state == STOP) begin
-      Drive_flag <= 1;
-      m_busy_o   <= 0;
     end
+    //else if (current_state == STOP) begin
+
+    // end
 
   end
 
@@ -198,7 +211,7 @@ module I2C_master (
         else next_state = tmp_addr[0] ? READ_BYTE : WRITE_BYTE;
       end
       STOP: begin
-        SCA_en = 1;
+        SCA_en = 0;
         next_state = IDLE;
 
 

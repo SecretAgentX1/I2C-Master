@@ -189,6 +189,7 @@ module I2C_master_tb;
     wsda = 0;
     m_start_i = 0;
     m_stop_i = 1;
+    // #40 m_stop_i =1 ;m_start_i =1;
 
 
     #2000;
