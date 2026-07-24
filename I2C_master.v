@@ -89,6 +89,7 @@ module I2C_master (
     end else if (current_state == STOP) begin
       Drive_flag <= 1;
       m_busy_o <= 0;
+      m_data_ready_o <= 0;
       data_bits_counter <= 0;
       SCA_en <= 0;
     end
@@ -147,6 +148,7 @@ module I2C_master (
 
     end else if (current_state == READ_BYTE) begin
       m_error_o <= 0;
+      if (data_bits_counter < 7) m_data_ready_o <= 0;
       if (data_bits_counter != 8) temp_data <= {temp_data[6:0], SDA};
       data_bits_counter <= data_bits_counter + 1;
       if (data_bits_counter == 7) begin
