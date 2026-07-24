@@ -78,16 +78,28 @@ module I2C_master (
   // for start and stop 
   always @(negedge clk_i) begin
     if (current_state == START) begin
+      // start_counter_steps <= start_counter_steps + 1;
+      // if (start_counter_steps == 1) begin
+      tmp_addr <= {m_slave_add_i, m_w_r_i};
+      temp_data <= m_data_i;
+      Drive_flag <= 0;
+      m_busy_o <= 1;
       start_counter_steps <= start_counter_steps + 1;
-      if (start_counter_steps == 1) begin
-        tmp_addr   <= {m_slave_add_i, m_w_r_i};
-        temp_data  <= m_data_i;
-        Drive_flag <= 0;
-        m_busy_o   <= 1;
-      end
+      // end
     end else if (current_state == STOP) begin
       Drive_flag <= 1;
-      m_busy_o   <= 0;
+      m_busy_o <= 0;
+      data_bits_counter <= 0;
+      SCA_en <= 0;
+    end
+  end
+
+  always @(posedge clk_i) begin
+    if (current_state == START) begin
+      if (Drive_flag == 0) begin
+        SCA_en <= 1;
+        start_counter_steps <= start_counter_steps + 1;
+      end
     end
   end
 
@@ -156,15 +168,16 @@ module I2C_master (
         else begin
           next_state = IDLE;
         end
-        SCA_en = 0;
+        // SCA_en = 0;
 
       end
       START: begin
         if (m_stop_i) next_state = STOP;
-        else begin
-          next_state = Drive_flag ? START : WRITE_ADDRESS;
-        end
-        SCA_en = 1;
+        else if (Drive_flag) next_state = START;
+        else if (SCA_en) next_state = WRITE_ADDRESS;
+        else next_state = START;
+
+        // SCA_en = 0;
 
       end
       WRITE_ADDRESS: begin
@@ -172,7 +185,7 @@ module I2C_master (
         else if (data_bits_counter == 0) begin
           next_state = RECV_ACK_NACK;
         end else next_state = WRITE_ADDRESS;
-        SCA_en = 1;
+        // SCA_en = 1;
 
 
       end
@@ -180,14 +193,14 @@ module I2C_master (
         if (m_stop_i) next_state = STOP;
         else if (data_bits_counter == 0) next_state = RECV_ACK_NACK;
         else next_state = WRITE_BYTE;
-        SCA_en = 1;
+        // SCA_en = 1;
 
       end
       RECV_ACK_NACK: begin
         if (m_stop_i) next_state = STOP;
         else if (ack_bits_counter == 1) next_state = tmp_addr[0] ? READ_BYTE : WRITE_BYTE;
         else next_state = RECV_ACK_NACK;
-        SCA_en = 1;
+        // SCA_en = 1;
 
       end
       READ_BYTE: begin
@@ -195,23 +208,23 @@ module I2C_master (
         else if (data_bits_counter == 8) begin
           next_state = SEND_ACK_NACK;
         end else next_state = READ_BYTE;
-        SCA_en = 1;
+        // SCA_en = 1;
 
 
       end
       SEND_ACK_NACK: begin
-        SCA_en = 1;
+        // SCA_en = 1;
         if (m_stop_i) next_state = STOP;
         else next_state = AFTER_ACK;
 
       end
       AFTER_ACK: begin
-        SCA_en = 1;
+        // SCA_en = 1;
         if (m_stop_i) next_state = STOP;
         else next_state = tmp_addr[0] ? READ_BYTE : WRITE_BYTE;
       end
       STOP: begin
-        SCA_en = 0;
+        // SCA_en = 0;
         next_state = IDLE;
 
 
