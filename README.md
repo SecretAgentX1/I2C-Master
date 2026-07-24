@@ -101,6 +101,10 @@ gtkwave dump.vcd
 
 ### Read then Stop then Write then Stop
   <img width="1889" height="475" alt="image" src="https://github.com/user-attachments/assets/5e50fe6f-6af7-4bd0-a01a-b1b0e52a98a4" />
+  
+### Write after Write
+  <img width="1897" height="494" alt="image" src="https://github.com/user-attachments/assets/e7e4d943-04a9-45b1-9a4b-ecf1082dbe81" />
+
 
 
 
