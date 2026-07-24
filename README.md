@@ -90,8 +90,8 @@ gtkwave dump.vcd
 ---
 
 ## Signals
-1. full write byte from start to stop
-   <img width="1851" height="449" alt="Screenshot_20260724_024616" src="https://github.com/user-attachments/assets/d42f84d4-d52b-433f-afab-97969f56954c" />
+### Full Write Byte from Start to Stop
+  <img width="1253" height="441" alt="Screenshot_20260724_031728" src="https://github.com/user-attachments/assets/2157203f-419f-4698-9841-1d4473e8193d" />
 
 ---
 
