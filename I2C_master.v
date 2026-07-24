@@ -129,9 +129,13 @@ module I2C_master (
 
 
     end else if (current_state == SEND_ACK_NACK) begin
-      m_data_ready_o <= 0;
+      data_bits_counter <= 0;
       Drive_flag <= m_ack_i;
-    end else if (current_state == AFTER_ACK) Drive_flag <= 1;
+    end else if (current_state == AFTER_ACK) begin
+      Drive_flag <= 1;
+      m_data_ready_o <= 0;
+
+    end
   end
 
   always @(posedge SCA_clk) begin
@@ -145,11 +149,11 @@ module I2C_master (
       m_error_o <= 0;
       if (data_bits_counter != 8) temp_data <= {temp_data[6:0], SDA};
       data_bits_counter <= data_bits_counter + 1;
-      if (data_bits_counter == 8) begin
+      if (data_bits_counter == 7) begin
         m_data_ready_o <= 1;
-        m_data_o <= temp_data;
-        temp_data <= 0;
-        data_bits_counter <= 0;
+        m_data_o <= {temp_data, SDA};
+        // temp_data <= 0;
+        // data_bits_counter <= 0;
       end
 
 
