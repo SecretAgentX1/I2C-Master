@@ -1274,7 +1274,19 @@ module I2C_master_tb;
     end
   endtask
 
-  localparam t_slave_add_i = 7'b1010111, t_data_i = 8'b00101100, t_rst_i = 0 , t_data_o = 8'b10111000,t_data_i2= 8'b01000111;
+  task read_read;
+    input [7:0] t_data_o;
+    input [7:0] t_data_o2;
+    input [6:0] t_slave_add_i;
+    input [6:0] t_slave_add_i2;
+    input t_rst_i;
+    begin
+      read_byte(t_data_o, t_slave_add_i, 0);
+      read_byte(t_data_o2, t_slave_add_i2, 0);
+    end
+  endtask
+
+  localparam t_slave_add_i = 7'b1010111, t_data_i = 8'b00101100, t_rst_i = 0 , t_data_o = 8'b10111000,t_data_i2= 8'b01000111,t_slave_add_i2=7'b1011001,t_data_o2 = 8'b00101100;
 
   wire [1:0] W = 0, R = 1, WR = 2, RW = 3, WW = 4;
 
@@ -1286,7 +1298,8 @@ module I2C_master_tb;
     // read_byte(t_data_o, t_slave_add_i, 0);
     // write_read(t_data_i, t_data_o, t_slave_add_i, 0);
     // read_write(t_data_i, t_data_o, t_slave_add_i, 0);
-    write_write(t_data_i, t_slave_add_i, t_data_i2, 0);
+    // write_write(t_data_i, t_slave_add_i, t_data_i2, 0);
+    read_read(t_data_o, t_data_o2, t_slave_add_i, t_slave_add_i2, 0);
 
     //   default: write_byte(t_data_i, t_slave_add_i, 0);
     // endcase
