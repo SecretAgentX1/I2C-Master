@@ -97,7 +97,11 @@ gtkwave dump.vcd
   <img width="1245" height="453" alt="Screenshot_20260724_173051" src="https://github.com/user-attachments/assets/4db61095-4a62-4151-81da-929558365d82" />
 
 ### Write then Stop then Read then Stop
-<img width="1889" height="460" alt="image" src="https://github.com/user-attachments/assets/49b131e1-a41c-4dbc-82c6-01d85f3998d3" />
+  <img width="1889" height="460" alt="image" src="https://github.com/user-attachments/assets/49b131e1-a41c-4dbc-82c6-01d85f3998d3" />
+
+### Read then Stop then Write then Stop
+  <img width="1889" height="475" alt="image" src="https://github.com/user-attachments/assets/5e50fe6f-6af7-4bd0-a01a-b1b0e52a98a4" />
+
 
 
 ---
