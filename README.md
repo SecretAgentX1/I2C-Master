@@ -96,6 +96,10 @@ gtkwave dump.vcd
 ### Full Read Byte from Start to Stop
   <img width="1245" height="453" alt="Screenshot_20260724_173051" src="https://github.com/user-attachments/assets/4db61095-4a62-4151-81da-929558365d82" />
 
+### Write then Stop then Read then Stop
+<img width="1889" height="460" alt="image" src="https://github.com/user-attachments/assets/49b131e1-a41c-4dbc-82c6-01d85f3998d3" />
+
+
 ---
 
 ## Requirements
