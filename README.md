@@ -105,6 +105,10 @@ gtkwave dump.vcd
 ### Write after Write
   <img width="1897" height="494" alt="image" src="https://github.com/user-attachments/assets/e7e4d943-04a9-45b1-9a4b-ecf1082dbe81" />
 
+### Read after Read
+  <img width="1897" height="477" alt="image" src="https://github.com/user-attachments/assets/78cc9cc3-b3a6-49a4-8da1-add1f126fd7d" />
+
+
 
 
 
