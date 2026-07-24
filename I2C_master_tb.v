@@ -971,7 +971,7 @@ module I2C_master_tb;
       // WRITE_BYTE
       @(negedge test_SCA);
       wr = 0;
-      @(negedge test_SCA);
+      // @(negedge test_SCA);
       $display("%0t test here", $time);
       @(posedge test_SCA)
       if (test_SDA == m_data_i[7]) $display("time = %0t | write byte passed", $time);
@@ -1047,18 +1047,247 @@ module I2C_master_tb;
     end
   endtask
 
-  localparam t_slave_add_i = 7'b1010111, t_data_i = 8'b00101100, t_rst_i = 0 , t_data_o = 8'b10111000;
+  task write_write;
+    input [7:0] t_data_i;
+    input [6:0] t_slave_add_i;
+    input [7:0] t_data_i2;
+    input t_rst_i;
+    begin
+      wsda          = 0;
+      wr            = 0;
+      clk_i         = 0;
+      rst_i         = t_rst_i;
+      m_w_r_i       = 0;
+      m_start_i     = 0;
+      m_stop_i      = 0;
+      m_slave_add_i = t_slave_add_i;
+      m_ack_i       = 0;
+      m_data_i      = t_data_i;
 
-  wire [1:0] W = 0, R = 1, WR = 2, RW = 3;
+      #20;
+      rst_i     = 1;
+      m_start_i = 1;
+      @(negedge test_SDA);
+      @(negedge test_SCA);
+      $display("time = %0t | start passed", $time);
+      @(posedge test_SCA)
+      if (test_SDA == m_slave_add_i[6]) $display("time = %0t | write address passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write address failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_slave_add_i[5]) $display("time = %0t | write address passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write address failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_slave_add_i[4]) $display("time = %0t | write address passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write address failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_slave_add_i[3]) $display("time = %0t | write address passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write address failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_slave_add_i[2]) $display("time = %0t | write address passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write address failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_slave_add_i[1]) $display("time = %0t | write address passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write address failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_slave_add_i[0]) $display("time = %0t | write address passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write address failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == 0) $display("time = %0t | write address passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write address failed", $time);
+      end
 
-  wire [1:0] ChoiceOfTest = WR;
+      if (i == 0) $display("Write address passed");
+      else $display("Write address failed");
+      i = 0;
+
+
+
+      // ACK
+      @(negedge test_SCA);
+      m_data_i = t_data_i2;
+      wsda     = 'b0;
+      wr       = 1;
+      @(posedge test_SCA);
+
+      // WRITE_BYTE
+      @(negedge test_SCA);
+      wr = 0;
+
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[7]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[6]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[5]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[4]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[3]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[2]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[1]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[0]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+
+      if (i == 0) $display("Write byte passed");
+      else $display("Write byte failed");
+      i = 0;
+
+
+      // ack
+
+      @(negedge test_SCA) wsda = 'b0;
+      wr = 1;
+      // wsda = 1;
+      @(posedge test_SCA);
+
+      //write another byte
+      @(negedge test_SCA);
+      wr = 0;
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[7]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[6]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[5]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[4]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[3]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[2]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[1]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+      @(posedge test_SCA)
+      if (test_SDA == m_data_i[0]) $display("time = %0t | write byte passed", $time);
+      else begin
+        i = i - 1;
+        $display("time = %0t | write byte failed", $time);
+      end
+
+      if (i == 0) $display("Write byte passed");
+      else $display("Write byte failed");
+      i = 0;
+
+
+      // stopping
+
+      @(negedge test_SCA) wsda = 'b0;
+      wr = 1;
+      // wsda = 1;
+      @(posedge test_SCA);
+
+
+      //Stopping 
+      @(negedge test_SCA);
+      wr = 0;
+      wsda = 0;
+      m_start_i = 0;
+      m_stop_i = 1;
+      m_w_r_i = 1;
+      m_slave_add_i = 1;
+      $display("stopped here");
+    end
+  endtask
+
+  localparam t_slave_add_i = 7'b1010111, t_data_i = 8'b00101100, t_rst_i = 0 , t_data_o = 8'b10111000,t_data_i2= 8'b01000111;
+
+  wire [1:0] W = 0, R = 1, WR = 2, RW = 3, WW = 4;
+
+  wire [2:0] ChoiceOfTest = WR;
   always #10 clk_i = ~clk_i;
   initial begin
     // case (ChoiceOfTest)
     // write_byte(t_data_i, t_slave_add_i, 0);
     // read_byte(t_data_o, t_slave_add_i, 0);
     // write_read(t_data_i, t_data_o, t_slave_add_i, 0);
-    read_write(t_data_i, t_data_o, t_slave_add_i, 0);
+    // read_write(t_data_i, t_data_o, t_slave_add_i, 0);
+    write_write(t_data_i, t_slave_add_i, t_data_i2, 0);
+
     //   default: write_byte(t_data_i, t_slave_add_i, 0);
     // endcase
 

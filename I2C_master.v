@@ -144,9 +144,11 @@ module I2C_master (
     if (current_state == RECV_ACK_NACK) begin
       m_error_o <= SDA;
       ack_bits_counter <= ack_bits_counter + 1;
+      temp_data <= m_data_i;
 
 
     end else if (current_state == READ_BYTE) begin
+      ack_bits_counter <= 0;
       m_error_o <= 0;
       if (data_bits_counter < 7) m_data_ready_o <= 0;
       if (data_bits_counter != 8) temp_data <= {temp_data[6:0], SDA};
